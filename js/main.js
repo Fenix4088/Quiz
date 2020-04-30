@@ -22,6 +22,7 @@ btnNext.forEach( function(button) {
     button.addEventListener('click', function() {
 
         let thisCard = this.closest('[data-card]');
+        let thisCardNumber = parseInt(thisCard.dataset.card);
 
         // Условие пи котором мы проверяем нужно валидировать эту карточку или нет
         if (thisCard.dataset.validate == "novalidate") {
@@ -29,6 +30,7 @@ btnNext.forEach( function(button) {
             navigate("next", thisCard);
         } else {
             console.log("VALIDATE");
+            saveAnswer(thisCardNumber, gatherCardData(thisCardNumber));
             navigate("next", thisCard);
         }
         
@@ -133,4 +135,9 @@ function gatherCardData (number) {
 
     return data;
 
+}
+
+// Функция записи ответов в обьект с ответами
+function saveAnswer (number, data) {
+    answers[number] = data;
 }

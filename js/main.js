@@ -199,3 +199,21 @@ document.querySelectorAll(".radio-group").forEach( function(item) {
         }
     });
 });
+
+// Подсвечиваем рамку для чекбоксов
+document.querySelectorAll('label.checkbox-block input[type="checkbox"]').forEach( function(item) {
+    item.addEventListener("change", function() {
+        console.dir(item);
+        if(item.checked) {
+            // Добавляем активный класс к тегу label в котором он лежит
+            item.closest("label").classList.add("checkbox-block--active");
+        } else {
+            // Убираем класс
+            item.closest("label").classList.remove("checkbox-block--active");
+        }
+    })
+});
+
+
+
+

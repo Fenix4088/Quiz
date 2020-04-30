@@ -14,8 +14,6 @@ let answers = {
     5: null
 }
 
-
-
 // Движение вперед
 let btnNext = document.querySelectorAll('[data-nav="next"]');
 btnNext.forEach( function(button) {
@@ -75,15 +73,6 @@ function navigate (direction, thisCard) {
 
 // Функция которая союирает все данные из текущей карточки
 function gatherCardData (number) {
-    /* 
-        {
-            question: "Ваше любимое блюдо",
-            answer: [
-                {name: 'pirogi', value: "Pirogi"},
-                {name: 'salaty', value: "Salaty"}
-            ]
-        }
-    */
 
     let question;
     let result = [];
@@ -194,3 +183,19 @@ function checkOnRequired(number) {
         return false;
     }
 }
+
+// Подсвечиваем рамку у радиокнопок
+document.querySelectorAll(".radio-group").forEach( function(item) {
+    item.addEventListener("click", function(e) {
+        // Проверяем где произошел клик
+        let label = e.target.closest("label");
+        if (label) {
+            // Отменяем активный класс у всех label
+            label.closest(".radio-group").querySelectorAll("label").forEach( function(item) {
+                item.classList.remove("radio-block--active");
+            });
+            // Добавляем активный класс к label по которому был клик
+            label.classList.add("radio-block--active");
+        }
+    });
+});

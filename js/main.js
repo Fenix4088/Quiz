@@ -88,7 +88,7 @@ function gatherCardData (number) {
     
     // 1. Находим все заполненые значения из радио кнопок
     let radioValues = curentCard.querySelectorAll('[type="radio"]');
-    // console.log(radioValues);
+
     radioValues.forEach( function(item) {
         if (item.checked) {
            result.push({
@@ -97,6 +97,32 @@ function gatherCardData (number) {
            });
         }
     });
+
+    // 2. Находим все заполненные значения из чекбоксов
+    let checkboxValues = curentCard.querySelectorAll('[type="checkbox"]');
+    checkboxValues.forEach(function(item) {
+        console.dir(item)
+        if (item.checked) {
+            result.push({
+                name: item.name,
+                value: item.value
+            });
+         }
+    });
+
+    // 3. Находим все заполненные значения из импутов
+    let inputValues = curentCard.querySelectorAll('[type="text"], [type="email"], [type="number"]');
+
+    inputValues.forEach(function(item) {
+        let itemValue = item.value;
+        if (itemValue.trim() != "") {
+            result.push({
+                name: item.name,
+                value: item.value
+            });
+        }
+    });
+
 
     console.log(result);
 

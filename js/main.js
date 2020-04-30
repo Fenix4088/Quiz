@@ -17,3 +17,17 @@ btnNext.forEach( function(button) {
 
 // Движение назат
 let btnPrev = document.querySelectorAll('[data-nav="prev"]');
+btnPrev.forEach( function(button) {
+    button.addEventListener('click', function() {
+        console.log("Prev");
+
+        let thisCard = this.closest('[data-card]');
+        let thisCardNumber = parseInt(thisCard.dataset.card);
+        let prevCard = thisCardNumber - 1;
+
+        thisCard.classList.add("hidden");
+
+        document.querySelector(`[data-card="${prevCard}"]`).classList.remove('hidden');
+
+    });
+});

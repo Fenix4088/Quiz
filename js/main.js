@@ -26,12 +26,18 @@ btnNext.forEach( function(button) {
 
         // Условие пи котором мы проверяем нужно валидировать эту карточку или нет
         if (thisCard.dataset.validate == "novalidate") {
-            console.log("NOVALIDATE");
             navigate("next", thisCard);
         } else {
-            console.log("VALIDATE");
+            // При движении вперед сохраняем данные в обьект
             saveAnswer(thisCardNumber, gatherCardData(thisCardNumber));
-            navigate("next", thisCard);
+
+            // Валидация на заплненость
+            if(isFilled(thisCardNumber)) {
+                navigate("next", thisCard);
+            } else {
+                alert("Выберете вариант ответа прежде чем продолжить");
+            }
+            
         }
         
     });
@@ -140,4 +146,14 @@ function gatherCardData (number) {
 // Функция записи ответов в обьект с ответами
 function saveAnswer (number, data) {
     answers[number] = data;
+}
+
+// Функция проверки на заполненость
+function isFilled(number) {
+    console.log(answers[number].answer.length);
+    if (answers[number].answer.length > 0) {
+        return true;
+    } else {
+        return false;
+    }
 }

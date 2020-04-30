@@ -25,6 +25,7 @@ btnNext.forEach( function(button) {
         // Условие пи котором мы проверяем нужно валидировать эту карточку или нет
         if (thisCard.dataset.validate == "novalidate") {
             navigate("next", thisCard);
+            updateProgressBar("next", thisCardNumber);
         } else {
             // При движении вперед сохраняем данные в обьект
             saveAnswer(thisCardNumber, gatherCardData(thisCardNumber));
@@ -32,6 +33,7 @@ btnNext.forEach( function(button) {
             // Валидация на заплненость
             if(isFilled(thisCardNumber) && checkOnRequired(thisCardNumber)) {
                 navigate("next", thisCard);
+                updateProgressBar("next", thisCardNumber);
             } else {
                 alert("Выберете вариант ответа прежде чем продолжить");
             }
@@ -47,8 +49,10 @@ btnPrev.forEach( function(button) {
     button.addEventListener('click', function() {
 
         let thisCard = this.closest('[data-card]');
-        navigate("prev", thisCard);
+        let thisCardNumber = parseInt(thisCard.dataset.card);
 
+        navigate("prev", thisCard);
+        updateProgressBar("prev", thisCardNumber);
     });
 });
 
@@ -98,7 +102,6 @@ function gatherCardData (number) {
     // 2. Находим все заполненные значения из чекбоксов
     let checkboxValues = currentCard.querySelectorAll('[type="checkbox"]');
     checkboxValues.forEach(function(item) {
-        console.dir(item)
         if (item.checked) {
             result.push({
                 name: item.name,
@@ -121,7 +124,7 @@ function gatherCardData (number) {
     });
 
 
-    console.log(result);
+
 
     let data = {
         question: question,
@@ -139,7 +142,6 @@ function saveAnswer (number, data) {
 
 // Функция проверки на заполненость
 function isFilled(number) {
-    console.log(answers[number].answer.length);
     if (answers[number].answer.length > 0) {
         return true;
     } else {
@@ -161,9 +163,6 @@ function checkOnRequired(number) {
     let isValidArray = [];
 
     requiredFields.forEach(function(item) {
-        console.dir(item.type)
-        console.dir(item.value)
-        console.dir(item.checked);
 
         if(item.type == "checkbox" && item.checked == "false") {
             isValidArray.push(false);
@@ -203,7 +202,6 @@ document.querySelectorAll(".radio-group").forEach( function(item) {
 // Подсвечиваем рамку для чекбоксов
 document.querySelectorAll('label.checkbox-block input[type="checkbox"]').forEach( function(item) {
     item.addEventListener("change", function() {
-        console.dir(item);
         if(item.checked) {
             // Добавляем активный класс к тегу label в котором он лежит
             item.closest("label").classList.add("checkbox-block--active");
@@ -213,6 +211,37 @@ document.querySelectorAll('label.checkbox-block input[type="checkbox"]').forEach
         }
     })
 });
+
+// Отображения прогресс бара
+function updateProgressBar (direction, cardNumber) {
+    // Расчет количества всех карточек
+    let cardsTotalNumber = document.querySelectorAll("[data-card]").length;
+
+    // Понять на какой карточке мы находимся
+    // Проверка направления перемещения
+    if(direction == "next") {
+        cardNumber = cardNumber + 1;
+    } else if(direction == "prev") {
+        cardNumber = cardNumber - 1;
+    }
+    
+    // Расчет процентов прохождения
+    let progress = parseInt(((cardNumber * 100) / cardsTotalNumber).toFixed());
+
+    // Находим и обновляем прогресс 
+    let progressBar = document.querySelector(`[data-card="${cardNumber}"]`).querySelector(".progress");
+
+    if(progressBar) {
+        // Обновить число прогресс бара
+        progressBar.querySelector(".progress__label strong").innerText = `${progress}%`;
+        // Обновить полоску прогресс бара
+        progressBar.querySelector(".progress__line-bar").style = `width: ${progress}%`;
+    }
+}
+
+
+
+
 
 
 

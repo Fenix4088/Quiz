@@ -32,7 +32,7 @@ btnNext.forEach( function(button) {
             saveAnswer(thisCardNumber, gatherCardData(thisCardNumber));
 
             // Валидация на заплненость
-            if(isFilled(thisCardNumber)) {
+            if(isFilled(thisCardNumber) && checkOnRequired(thisCardNumber)) {
                 navigate("next", thisCard);
             } else {
                 alert("Выберете вариант ответа прежде чем продолжить");
@@ -89,13 +89,13 @@ function gatherCardData (number) {
     let result = [];
 
     // Находим карточку по номеру и по дата атрибуту
-    let curentCard = document.querySelector(`[data-card="${number}"]`);
+    let currentCard = document.querySelector(`[data-card="${number}"]`);
    
     // Находим главный вопрос карточки
-    question = curentCard.querySelector("[data-question]").innerText;
+    question = currentCard.querySelector("[data-question]").innerText;
     
     // 1. Находим все заполненые значения из радио кнопок
-    let radioValues = curentCard.querySelectorAll('[type="radio"]');
+    let radioValues = currentCard.querySelectorAll('[type="radio"]');
 
     radioValues.forEach( function(item) {
         if (item.checked) {
@@ -107,7 +107,7 @@ function gatherCardData (number) {
     });
 
     // 2. Находим все заполненные значения из чекбоксов
-    let checkboxValues = curentCard.querySelectorAll('[type="checkbox"]');
+    let checkboxValues = currentCard.querySelectorAll('[type="checkbox"]');
     checkboxValues.forEach(function(item) {
         console.dir(item)
         if (item.checked) {
@@ -119,7 +119,7 @@ function gatherCardData (number) {
     });
 
     // 3. Находим все заполненные значения из импутов
-    let inputValues = curentCard.querySelectorAll('[type="text"], [type="email"], [type="number"]');
+    let inputValues = currentCard.querySelectorAll('[type="text"], [type="email"], [type="number"]');
 
     inputValues.forEach(function(item) {
         let itemValue = item.value;
@@ -152,6 +152,43 @@ function saveAnswer (number, data) {
 function isFilled(number) {
     console.log(answers[number].answer.length);
     if (answers[number].answer.length > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// Доп функция для валидации имейла
+function validateEmail (email) {
+    let pattern = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+    return pattern.test(email);
+}
+
+// Проверка на заполненость required чкбоксов и инпутов c email
+function checkOnRequired(number) {
+    let currentCard = document.querySelector(`[data-card="${number}"]`);
+    let requiredFields = currentCard.querySelectorAll("[required]");
+
+    let isValidArray = [];
+
+    requiredFields.forEach(function(item) {
+        console.dir(item.type)
+        console.dir(item.value)
+        console.dir(item.checked);
+
+        if(item.type == "checkbox" && item.checked == "false") {
+            isValidArray.push(false);
+        } else if(item.type == "email") {
+            if( validateEmail(item.value) ) {
+                isValidArray.push(true);
+            } else {
+                isValidArray.push(false);
+            }
+        }
+    });
+
+    isValidArray.indexOf(false) 
+    if(isValidArray.indexOf(false) == -1) {
         return true;
     } else {
         return false;

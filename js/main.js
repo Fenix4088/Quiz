@@ -159,12 +159,10 @@ function validateEmail (email) {
 function checkOnRequired(number) {
     let currentCard = document.querySelector(`[data-card="${number}"]`);
     let requiredFields = currentCard.querySelectorAll("[required]");
-
     let isValidArray = [];
 
     requiredFields.forEach(function(item) {
-
-        if(item.type == "checkbox" && item.checked == "false") {
+        if(item.type == "checkbox" && item.checked == false) {
             isValidArray.push(false);
         } else if(item.type == "email") {
             if( validateEmail(item.value) ) {
